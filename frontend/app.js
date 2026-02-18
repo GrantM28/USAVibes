@@ -63,7 +63,7 @@ function addGeoJSONPointsToCluster(gj, clusterKey, popupFn){
 }
 
 async function loadBrand(brand, clusterKey){
-  const bbox = getBBox();
+  const bbox = getBBoxClamped();
   setStatus(`Loading ${brand}...`);
   const gj = await fetchJSON(`${API}/api/osm/brand?brand=${brand}&bbox=${bbox}`);
   addGeoJSONPointsToCluster(gj, clusterKey, (f) => {
@@ -75,7 +75,7 @@ async function loadBrand(brand, clusterKey){
 }
 
 async function loadQuakes(){
-  const bbox = getBBox();
+  const bbox = getBBoxClamped();
   const hours = Number(qHours.value || 24);
   const minmag = Number(qMinMag.value || 2.5);
 
@@ -131,6 +131,18 @@ function clampBBox(maxSpanDeg = 6) {
 
   if (latSpan > maxSpanDeg || lonSpan > maxSpanDeg) {
     throw new Error(`Zoom in more (bbox too large: ${latSpan.toFixed(1)}° x ${lonSpan.toFixed(1)}°)`);
+  }
+  return `${s.toFixed(5)},${w.toFixed(5)},${n.toFixed(5)},${e.toFixed(5)}`;
+}
+function getBBoxClamped(maxLatSpan = 6, maxLonSpan = 6) {
+  const b = map.getBounds();
+  const s = b.getSouth(), w = b.getWest(), n = b.getNorth(), e = b.getEast();
+
+  const latSpan = Math.abs(n - s);
+  const lonSpan = Math.abs(e - w);
+
+  if (latSpan > maxLatSpan || lonSpan > maxLonSpan) {
+    throw new Error(`Zoom in more. Area too large (${latSpan.toFixed(1)}° x ${lonSpan.toFixed(1)}°).`);
   }
   return `${s.toFixed(5)},${w.toFixed(5)},${n.toFixed(5)},${e.toFixed(5)}`;
 }

@@ -6,6 +6,7 @@ import httpx
 from cachetools import TTLCache
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import HTTPException
 
 app = FastAPI(title="USA Vibes Map API")
 
@@ -33,9 +34,20 @@ def _cache_key(prefix: str, **kwargs):
 async def _fetch_overpass(q: str) -> Dict[str, Any]:
     headers = {"User-Agent": UA}
     async with httpx.AsyncClient(timeout=60.0, headers=headers) as client:
-        r = await client.post(OVERPASS_ENDPOINT, data={"data": q})
-        r.raise_for_status()
-        return r.json()
+        try:
+            r = await client.post(OVERPASS_ENDPOINT, data={"data": q})
+            r.raise_for_status()
+            return r.json()
+        except httpx.HTTPStatusError as e:
+            raise HTTPException(
+                status_code=503,
+                detail=f"Overpass error {e.response.status_code}. Zoom in or try again."
+            )
+        except httpx.TimeoutException:
+            raise HTTPException(
+                status_code=503,
+                detail="Overpass timed out. Zoom in or try again."
+            )
 
 def _overpass_to_geojson(osm: Dict[str, Any]) -> Dict[str, Any]:
     feats = []
