@@ -123,6 +123,19 @@ async function refresh(){
   }
 }
 
+function clampBBox(maxSpanDeg = 6) {
+  const b = map.getBounds();
+  let s = b.getSouth(), w = b.getWest(), n = b.getNorth(), e = b.getEast();
+  const latSpan = Math.abs(n - s);
+  const lonSpan = Math.abs(e - w);
+
+  if (latSpan > maxSpanDeg || lonSpan > maxSpanDeg) {
+    throw new Error(`Zoom in more (bbox too large: ${latSpan.toFixed(1)}° x ${lonSpan.toFixed(1)}°)`);
+  }
+  return `${s.toFixed(5)},${w.toFixed(5)},${n.toFixed(5)},${e.toFixed(5)}`;
+}
+
+
 refreshBtn.addEventListener('click', refresh);
 
 randomBtn.addEventListener('click', () => {
