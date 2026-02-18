@@ -1,4 +1,4 @@
-const API = `${location.protocol}//${location.hostname}:8088`;
+const API = ""; // same-origin, nginx proxies /api for us
 
 const statusEl = document.getElementById('status');
 const refreshBtn = document.getElementById('refresh');
