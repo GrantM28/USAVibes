@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>USA Vibes Map</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="title">USA Vibes Map</div>
+      <div class="sub">Toggle layers. Zoom in for more detail.</div>
+
+      <div class="group">
+        <div class="gtitle">Layers</div>
+
+        <label class="row">
+          <input type="checkbox" id="layer-mcd" />
+          <span>McDonald's</span>
+        </label>
+
+        <label class="row">
+          <input type="checkbox" id="layer-starbucks" />
+          <span>Starbucks</span>
+        </label>
+
+        <label class="row">
+          <input type="checkbox" id="layer-dg" />
+          <span>Dollar General</span>
+        </label>
+
+        <label class="row">
+          <input type="checkbox" id="layer-quakes" />
+          <span>Earthquakes</span>
+        </label>
+
+        <div class="small">Tip: keep zoomed in. Big bbox = slow + lots of points.</div>
+      </div>
+
+      <div class="group">
+        <div class="gtitle">Earthquake Filters</div>
+        <div class="row2">
+          <label>Hours</label>
+          <input id="q-hours" type="number" min="1" max="168" value="24" />
+        </div>
+        <div class="row2">
+          <label>Min Mag</label>
+          <input id="q-minmag" type="number" step="0.1" min="0" value="2.5" />
+        </div>
+      </div>
+
+      <div class="group">
+        <button id="refresh" class="btn">Refresh visible area</button>
+        <button id="random" class="btn btn2">Random USA jump</button>
+      </div>
+
+      <div class="status" id="status">Idle</div>
+    </aside>
+
+    <main class="main">
+      <div id="map"></div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

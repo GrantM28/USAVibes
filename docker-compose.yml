@@ -1,0 +1,19 @@
+services:
+  api:
+    build: ./backend
+    container_name: usa-vibes-api
+    environment:
+      - OVERPASS_ENDPOINT=https://overpass-api.de/api/interpreter
+      - CACHE_TTL_SECONDS=3600
+    ports:
+      - "8088:8088"
+
+  web:
+    image: nginx:alpine
+    container_name: usa-vibes-web
+    ports:
+      - "8087:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    depends_on:
+      - api
